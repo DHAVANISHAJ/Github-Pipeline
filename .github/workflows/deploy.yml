@@ -1,0 +1,25 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: 
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Save Commit Info Locally
+        run: |
+           mkdir -p commit_data
+           echo "Commit: ${{ github.sha }}" > commit_data/latest_commit.txt
+           echo "Message: ${{ github.event.head_commit.message }}" >> commit_data/latest_commit.txt
+           echo "Author: ${{ github.event.head_commit.author.name }}" >> commit_data/latest_commit.txt
+           echo "Timestamp: ${{ github.event.head_commit.timestamp }}" >> commit_data/latest_commit.txt
+           ls -1 > commit_data/file_list.txt
+      - name: Copy to folder
+        run: |
+          mkdir -p /root/latest_commit
+          cp -r * /root/latest_commit
+          echo "Done"
